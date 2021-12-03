@@ -13,14 +13,19 @@ import (
 	"time"
 )
 
-func getContainers(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
+func getCLI() *client.Client {
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
 		panic(err)
 	}
 
+	return cli
+}
+
+func getContainers(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	cli := getCLI()
 	containers, err := cli.ContainerList(context.Background(), types.ContainerListOptions{
 		All: true,
 	})
@@ -35,11 +40,7 @@ func getContainerWithID(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 
-	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
-	if err != nil {
-		panic(err)
-	}
-
+	cli := getCLI()
 	containers, err := cli.ContainerList(context.Background(), types.ContainerListOptions{
 		All: true,
 	})
@@ -58,17 +59,13 @@ func getLogsWithID(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 
-	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
-	if err != nil {
-		panic(err)
-	}
-
 	f, ok := w.(http.Flusher)
 	if !ok {
 		http.Error(w, "Streaming unsupported!", http.StatusInternalServerError)
 		return
 	}
 
+	cli := getCLI()
 	logs, err := cli.ContainerLogs(context.Background(), params["id"], types.ContainerLogsOptions{
 		ShowStdout: true,
 		Follow:     true,
@@ -103,17 +100,13 @@ func getLogsWithIDAndTail(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 
-	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
-	if err != nil {
-		panic(err)
-	}
-
 	f, ok := w.(http.Flusher)
 	if !ok {
 		http.Error(w, "Streaming unsupported!", http.StatusInternalServerError)
 		return
 	}
 
+	cli := getCLI()
 	logs, err := cli.ContainerLogs(context.Background(), params["id"], types.ContainerLogsOptions{
 		ShowStdout: true,
 		Follow:     true,
@@ -149,11 +142,7 @@ func getInspectWithID(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 
-	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
-	if err != nil {
-		panic(err)
-	}
-
+	cli := getCLI()
 	inspect, err := cli.ContainerInspect(context.Background(), params["id"])
 	if err != nil {
 		panic(err)
