@@ -10,6 +10,7 @@ func main() {
 	router.HandleFunc("/containers", getContainers).Methods("GET")
 	router.HandleFunc("/container/{id}", getContainerWithID).Methods("GET")
 	router.HandleFunc("/container/{id}/logs", getLogsWithID).Methods("GET")
+	router.HandleFunc("/container/{id}/logs/{tail}", getLogsWithIDAndTail).Methods("GET")
 
 	http.Handle("/", router)
 	http.ListenAndServe(":8000", nil)
