@@ -13,10 +13,6 @@ import (
 	"time"
 )
 
-type Logs struct {
-	Logs	int64
-}
-
 func getContainers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
