@@ -11,6 +11,7 @@ func main() {
 	router.HandleFunc("/container/{id}", getContainerWithID).Methods("GET")
 	router.HandleFunc("/container/{id}/logs", getLogsWithID).Methods("GET")
 	router.HandleFunc("/container/{id}/logs/{tail}", getLogsWithIDAndTail).Methods("GET")
+	router.HandleFunc("/container/{id}/inspect", getInspectWithID).Methods("GET")
 
 	http.Handle("/", router)
 	http.ListenAndServe(":8000", nil)

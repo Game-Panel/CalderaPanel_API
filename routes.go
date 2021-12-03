@@ -144,3 +144,20 @@ func getLogsWithIDAndTail(w http.ResponseWriter, r *http.Request) {
 		f.Flush()
 	}
 }
+
+func getInspectWithID(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r)
+
+	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
+	if err != nil {
+		panic(err)
+	}
+
+	inspect, err := cli.ContainerInspect(context.Background(), params["id"])
+	if err != nil {
+		panic(err)
+	}
+
+	json.NewEncoder(w).Encode(inspect)
+}
